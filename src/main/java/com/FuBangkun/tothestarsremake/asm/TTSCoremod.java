@@ -1,8 +1,6 @@
 package com.FuBangkun.tothestarsremake.asm;
 
 import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
-import org.spongepowered.asm.launch.MixinBootstrap;
-import org.spongepowered.asm.mixin.Mixins;
 
 import javax.annotation.Nullable;
 import java.util.Collections;
@@ -12,17 +10,15 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import zone.rong.mixinbooter.ILateMixinLoader;
 
+/**
+ * @author FuBangkun
+ */
 @IFMLLoadingPlugin.SortingIndex(TTSCoremod.SORTINGINDEX)
 @IFMLLoadingPlugin.MCVersion("1.12.2")
 @IFMLLoadingPlugin.TransformerExclusions("com.FuBangkun.tothestarsremake.asm")
 public class TTSCoremod implements IFMLLoadingPlugin, ILateMixinLoader {
 	public static final int SORTINGINDEX = 3;
 	public static final Logger logger = LogManager.getLogger("ToTheStarsRemakeCore");
-
-	public TTSCoremod() {
-		MixinBootstrap.init();
-		Mixins.addConfiguration("mixins.tothestarsremake.json");
-	}
 
 	@Override
 	public String[] getASMTransformerClass() {
