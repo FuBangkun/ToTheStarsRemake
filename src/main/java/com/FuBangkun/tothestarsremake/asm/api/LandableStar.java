@@ -1,6 +1,7 @@
 package com.FuBangkun.tothestarsremake.asm.api;
 
-import micdoodle8.mods.galacticraft.api.galaxies.*;
+import micdoodle8.mods.galacticraft.api.galaxies.SolarSystem;
+import micdoodle8.mods.galacticraft.api.galaxies.Star;
 import net.minecraft.world.biome.Biome;
 
 import java.util.Objects;

@@ -2,7 +2,10 @@ package com.FuBangkun.tothestarsremake.haveasoltime.proxy;
 
 import micdoodle8.mods.galacticraft.api.vector.Vector3;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.event.*;
+import net.minecraftforge.fml.common.event.FMLConstructionEvent;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
 public class HSTProxy {
     public void construction(FMLConstructionEvent event) {

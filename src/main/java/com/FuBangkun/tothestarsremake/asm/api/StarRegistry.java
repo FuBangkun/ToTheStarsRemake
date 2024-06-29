@@ -1,15 +1,14 @@
 package com.FuBangkun.tothestarsremake.asm.api;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-import java.util.HashMap;
-
 import micdoodle8.mods.galacticraft.api.galaxies.CelestialBody;
 import micdoodle8.mods.galacticraft.api.galaxies.SolarSystem;
-import micdoodle8.mods.galacticraft.core.util.list.ImmutableCelestialList;
 import micdoodle8.mods.galacticraft.core.util.list.CelestialList;
+import micdoodle8.mods.galacticraft.core.util.list.ImmutableCelestialList;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class StarRegistry {
     private static final CelestialList<LandableStar> landableStars = CelestialList.create();

@@ -4,7 +4,6 @@ import com.FuBangkun.tothestarsremake.asm.api.LandableStar;
 import com.FuBangkun.tothestarsremake.asm.api.StarRegistry;
 import micdoodle8.mods.galacticraft.api.galaxies.CelestialBody;
 import micdoodle8.mods.galacticraft.api.galaxies.GalaxyRegistry;
-
 import micdoodle8.mods.galacticraft.api.galaxies.Moon;
 import micdoodle8.mods.galacticraft.api.galaxies.Planet;
 import micdoodle8.mods.galacticraft.api.util.stream.CelestialCollector;

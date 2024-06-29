@@ -3,7 +3,7 @@ package com.FuBangkun.tothestarsremake.asm.mixin;
 import com.FuBangkun.tothestarsremake.asm.api.LandableStar;
 import com.FuBangkun.tothestarsremake.asm.api.StarRegistry;
 import com.FuBangkun.tothestarsremake.asm.api.StarWorldUtil;
-import micdoodle8.mods.galacticraft.api.galaxies.*;
+import micdoodle8.mods.galacticraft.api.galaxies.CelestialBody;
 import micdoodle8.mods.galacticraft.api.world.IGalacticraftWorldProvider;
 import micdoodle8.mods.galacticraft.core.util.WorldUtil;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -13,10 +13,10 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
 
 @Mixin(WorldUtil.class)
 public abstract class WorldUtilMixin {
