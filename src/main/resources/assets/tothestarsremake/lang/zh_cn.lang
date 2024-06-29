@@ -1,0 +1,4 @@
+tile.sol_plasma.name=太阳等离子
+fluid.sol_plasma=太阳等离子
+death.attack.sol_plasma=%1$s被太阳等离子煮熟了
+item.bucket_sol_plasma.name=太阳等离子桶

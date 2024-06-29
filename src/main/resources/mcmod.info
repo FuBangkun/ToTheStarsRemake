@@ -1,0 +1,8 @@
+[{
+	"modid": "tothestarsremake",
+	"name": "ToTheStarsRemake",
+	"version": "${mod_version}",
+	"mcversion": "1.12.2",
+	"description": "Allows you to travel to stars in Galacticraft 4.",
+	"authorList": ["FuBangkun"]
+}]
