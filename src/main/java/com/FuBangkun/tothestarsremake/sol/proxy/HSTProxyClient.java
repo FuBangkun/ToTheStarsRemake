@@ -1,8 +1,8 @@
-package com.FuBangkun.tothestarsremake.haveasoltime.proxy;
+package com.FuBangkun.tothestarsremake.sol.proxy;
 
-import com.FuBangkun.tothestarsremake.haveasoltime.SkyProviderSol;
-import com.FuBangkun.tothestarsremake.haveasoltime.SolBlocks;
-import com.FuBangkun.tothestarsremake.haveasoltime.WorldProviderSol;
+import com.FuBangkun.tothestarsremake.sol.SkyProviderSol;
+import com.FuBangkun.tothestarsremake.sol.SolBlocks;
+import com.FuBangkun.tothestarsremake.sol.WorldProviderSol;
 import micdoodle8.mods.galacticraft.api.vector.Vector3;
 import micdoodle8.mods.galacticraft.api.world.IGalacticraftWorldProvider;
 import micdoodle8.mods.galacticraft.core.client.CloudRenderer;

@@ -1,4 +1,4 @@
-package com.FuBangkun.tothestarsremake.haveasoltime;
+package com.FuBangkun.tothestarsremake.sol;
 
 
 import net.minecraft.block.Block;

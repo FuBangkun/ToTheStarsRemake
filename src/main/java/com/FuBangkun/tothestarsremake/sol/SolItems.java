@@ -1,4 +1,4 @@
-package com.FuBangkun.tothestarsremake.haveasoltime;
+package com.FuBangkun.tothestarsremake.sol;
 
 import micdoodle8.mods.galacticraft.core.GalacticraftCore;
 import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;

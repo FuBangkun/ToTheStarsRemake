@@ -3,8 +3,8 @@ package com.FuBangkun.tothestarsremake;
 import com.FuBangkun.tothestarsremake.asm.api.LandableStar;
 import com.FuBangkun.tothestarsremake.asm.api.StarRegistry;
 import com.FuBangkun.tothestarsremake.asm.api.StarWorldUtil;
-import com.FuBangkun.tothestarsremake.haveasoltime.*;
-import com.FuBangkun.tothestarsremake.haveasoltime.proxy.HSTProxy;
+import com.FuBangkun.tothestarsremake.sol.*;
+import com.FuBangkun.tothestarsremake.sol.proxy.HSTProxy;
 import com.FuBangkun.tothestarsremake.tothestarsremake.Tags;
 import micdoodle8.mods.galacticraft.api.GalacticraftRegistry;
 import micdoodle8.mods.galacticraft.api.galaxies.CelestialBody;
@@ -45,7 +45,7 @@ public class ToTheStarsRemake {
     @Mod.Instance(Tags.MOD_ID)
     public static ToTheStarsRemake instance;
 
-    @SidedProxy(clientSide = "com.FuBangkun.tothestarsremake.haveasoltime.proxy.HSTProxyClient", serverSide = "com.FuBangkun.tothestarsremake.haveasoltime.proxy.HSTProxy")
+    @SidedProxy(clientSide = "com.FuBangkun.tothestarsremake.sol.proxy.HSTProxyClient", serverSide = "com.FuBangkun.tothestarsremake.sol.proxy.HSTProxy")
     public static HSTProxy proxy;
 
     static {

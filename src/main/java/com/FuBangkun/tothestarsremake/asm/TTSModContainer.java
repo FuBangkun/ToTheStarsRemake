@@ -1,5 +1,6 @@
 package com.FuBangkun.tothestarsremake.asm;
 
+import com.FuBangkun.tothestarsremake.tothestarsremake.Tags;
 import com.google.common.eventbus.EventBus;
 import net.minecraftforge.fml.common.DummyModContainer;
 import net.minecraftforge.fml.common.LoadController;
@@ -15,7 +16,7 @@ public class TTSModContainer extends DummyModContainer {
 		ModMetadata meta = this.getMetadata();
 		meta.modId = "tothestarsremakecore";
 		meta.name = "ToTheStarsRemake Core";
-		meta.version = "1.0.0";
+		meta.version = Tags.VERSION;
 		meta.description = "The coremod for ToTheStarsRemake.";
 		meta.authorList = Collections.singletonList("FuBangkun");
 		meta.url = "";
