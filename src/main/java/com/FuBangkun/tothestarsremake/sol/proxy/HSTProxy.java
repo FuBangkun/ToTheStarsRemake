@@ -1,4 +1,4 @@
-package com.FuBangkun.tothestarsremake.haveasoltime.proxy;
+package com.FuBangkun.tothestarsremake.sol.proxy;
 
 import micdoodle8.mods.galacticraft.api.vector.Vector3;
 import net.minecraftforge.common.MinecraftForge;
