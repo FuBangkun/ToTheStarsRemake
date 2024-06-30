@@ -37,7 +37,7 @@ import org.apache.logging.log4j.Logger;
 import java.awt.*;
 import java.util.Arrays;
 
-@Mod(modid = Tags.MOD_ID, version = Tags.VERSION, dependencies = Tags.MOD_DESCRIPTION)
+@Mod(modid = Tags.MOD_ID, version = Tags.VERSION, dependencies = "required-after:galacticraftcore;required-after:galacticraftplanets;required-after:mixinbooter@[8.0,)")
 public class ToTheStarsRemake {
 
     public static Logger logger;
