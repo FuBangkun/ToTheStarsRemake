@@ -1,6 +1,5 @@
-package com.FuBangkun.tothestarsremake.sol;
+package com.FuBangkun.tothestarsremake;
 
-import com.FuBangkun.tothestarsremake.ToTheStarsRemake;
 import com.google.common.collect.Lists;
 import micdoodle8.mods.galacticraft.api.galaxies.CelestialBody;
 import micdoodle8.mods.galacticraft.api.prefab.world.gen.WorldProviderSpace;
@@ -12,14 +11,15 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.DimensionType;
 import net.minecraft.world.gen.IChunkGenerator;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
 public class WorldProviderSol extends WorldProviderSpace {
-
+    @Nonnull
     @Override
     public DimensionType getDimensionType() {
-        return ToTheStarsRemake.dimSol;
+        return TTSR.dimSol;
     }
 
     @Override
@@ -44,12 +44,12 @@ public class WorldProviderSol extends WorldProviderSpace {
 
     @Override
     public Class<? extends IChunkGenerator> getChunkProviderClass() {
-        return ChunkProviderTestSun.class;
+        return SolChunkProvider.class;
     }
 
     @Override
     public float getGravity() {
-        return (float) HSTHelper.realGravityToGCGravity(28.0);
+        return (float) TTSRHelper.realGravityToGCGravity(28.0);
     }
 
     @Override
@@ -69,7 +69,7 @@ public class WorldProviderSol extends WorldProviderSpace {
 
     @Override
     public CelestialBody getCelestialBody() {
-        return ToTheStarsRemake.starSol;
+        return TTSR.starSol;
     }
 
     @Override
@@ -95,7 +95,7 @@ public class WorldProviderSol extends WorldProviderSpace {
 
     @Override
     public List<Block> getSurfaceBlocks() {
-        return Lists.newArrayList(SolBlocks.blockSolPlasma);
+        return Lists.newArrayList(TTSR.blockSolPlasma);
     }
 
     @Override
