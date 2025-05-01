@@ -1,6 +1,5 @@
-package com.FuBangkun.tothestarsremake.sol;
+package com.FuBangkun.tothestarsremake;
 
-import micdoodle8.mods.galacticraft.api.world.IGalacticraftWorldProvider;
 import micdoodle8.mods.galacticraft.core.Constants;
 import micdoodle8.mods.galacticraft.core.util.ConfigManagerCore;
 import net.minecraft.client.Minecraft;
@@ -18,14 +17,14 @@ import org.lwjgl.opengl.GL11;
 import java.util.Random;
 
 @SideOnly(Side.CLIENT)
-public class SkyProviderSol extends IRenderHandler {
+public class SolSkyProvider extends IRenderHandler {
     private static final ResourceLocation overworldTexture = new ResourceLocation(Constants.ASSET_PREFIX, "textures/gui/celestialbodies/earth.png");
 
     public int starList;
     public int glSkyList;
     public int glSkyList2;
 
-    public SkyProviderSol(IGalacticraftWorldProvider solProvider) {
+    public SolSkyProvider() {
 
         int displayLists = GLAllocation.generateDisplayLists(3);
         this.starList = displayLists;
@@ -46,10 +45,8 @@ public class SkyProviderSol extends IRenderHandler {
         final int i = 256 / byte2 + 2;
         float f = 16F;
 
-        for (int j = -byte2 * i; j <= byte2 * i; j += byte2)
-        {
-            for (int l = -byte2 * i; l <= byte2 * i; l += byte2)
-            {
+        for (int j = -byte2 * i; j <= byte2 * i; j += byte2) {
+            for (int l = -byte2 * i; l <= byte2 * i; l += byte2) {
                 worldRenderer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
                 worldRenderer.pos(j, f, l).endVertex();
                 worldRenderer.pos(j + byte2, f, l).endVertex();
@@ -64,10 +61,8 @@ public class SkyProviderSol extends IRenderHandler {
         f = -16F;
         worldRenderer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
 
-        for (int k = -byte2 * i; k <= byte2 * i; k += byte2)
-        {
-            for (int i1 = -byte2 * i; i1 <= byte2 * i; i1 += byte2)
-            {
+        for (int k = -byte2 * i; k <= byte2 * i; k += byte2) {
+            for (int i1 = -byte2 * i; i1 <= byte2 * i; i1 += byte2) {
                 worldRenderer.pos(k + byte2, f, i1).endVertex();
                 worldRenderer.pos(k, f, i1).endVertex();
                 worldRenderer.pos(k, f, i1 + byte2).endVertex();
@@ -110,7 +105,6 @@ public class SkyProviderSol extends IRenderHandler {
         GL11.glEnable(GL11.GL_BLEND);
         OpenGlHelper.glBlendFunc(770, 771, 1, 0);
         RenderHelper.disableStandardItemLighting();
-        float f7;
         float f8;
         float f9;
         float f10;
@@ -126,30 +120,11 @@ public class SkyProviderSol extends IRenderHandler {
             GL11.glCallList(this.starList);
             GL11.glPopMatrix();
         }
-
-        float[] afloat = new float[4];
         GL11.glDisable(GL11.GL_TEXTURE_2D);
         GL11.glShadeModel(GL11.GL_SMOOTH);
         GL11.glPushMatrix();
         GL11.glRotatef(-90.0F, 0.0F, 1.0F, 0.0F);
         GL11.glRotatef(world.getCelestialAngle(partialTicks) * 360.0F, 1.0F, 0.0F, 0.0F);
-        afloat[0] = 255 / 255.0F;
-        afloat[1] = 194 / 255.0F;
-        afloat[2] = 180 / 255.0F;
-        afloat[3] = 0.3F;
-        f6 = afloat[0];
-        f7 = afloat[1];
-        f8 = afloat[2];
-        float f11;
-
-        if (mc.gameSettings.anaglyph) {
-            f9 = (f6 * 30.0F + f7 * 59.0F + f8 * 11.0F) / 100.0F;
-            f10 = (f6 * 30.0F + f7 * 70.0F) / 100.0F;
-            f11 = (f6 * 30.0F + f8 * 70.0F) / 100.0F;
-            f6 = f9;
-            f7 = f10;
-            f8 = f11;
-        }
 
         // Render earth
         f10 = 0.5F;
@@ -157,7 +132,7 @@ public class SkyProviderSol extends IRenderHandler {
         GL11.glRotatef(40.0F, 0.0F, 0.0F, 1.0F);
         GL11.glRotatef(200F, 1.0F, 0.0F, 0.0F);
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1F);
-        FMLClientHandler.instance().getClient().renderEngine.bindTexture(SkyProviderSol.overworldTexture);
+        FMLClientHandler.instance().getClient().renderEngine.bindTexture(SolSkyProvider.overworldTexture);
         worldRenderer1.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
         worldRenderer1.pos(-f10, -100.0D, f10).tex(0, 1.0).endVertex();
         worldRenderer1.pos(f10, -100.0D, f10).tex(1.0, 1.0).endVertex();
@@ -210,8 +185,7 @@ public class SkyProviderSol extends IRenderHandler {
 
         if (world.provider.isSkyColored()) {
             GL11.glColor3f(f1 * 0.2F + 0.04F, f2 * 0.2F + 0.04F, f3 * 0.6F + 0.1F);
-        }
-        else {
+        } else {
             GL11.glColor3f(f1, f2, f3);
         }
 
@@ -275,13 +249,5 @@ public class SkyProviderSol extends IRenderHandler {
         }
 
         var2.draw();
-    }
-
-    private Vec3d getCustomSkyColor() {
-        return new Vec3d(1.0f/10.0, 0.647f/10.0, 0.0f/10.0);
-    }
-
-    public float getSkyBrightness(float par1) {
-        return 1.0F;
     }
 }

@@ -1,8 +1,8 @@
-package com.FuBangkun.tothestarsremake.asm.mixin;
+package com.FuBangkun.tothestarsremake.mixin;
 
-import com.FuBangkun.tothestarsremake.asm.api.LandableStar;
-import com.FuBangkun.tothestarsremake.asm.api.StarRegistry;
-import com.FuBangkun.tothestarsremake.asm.api.StarWorldUtil;
+import com.FuBangkun.tothestarsremake.LandableStar;
+import com.FuBangkun.tothestarsremake.StarRegistry;
+import com.FuBangkun.tothestarsremake.StarWorldUtil;
 import micdoodle8.mods.galacticraft.api.galaxies.CelestialBody;
 import micdoodle8.mods.galacticraft.api.world.IGalacticraftWorldProvider;
 import micdoodle8.mods.galacticraft.core.util.WorldUtil;
@@ -51,7 +51,7 @@ public abstract class WorldUtilMixin {
         }
     }
 
-    @Inject(method="getPossibleDimensionsForSpaceshipTier", at = @At("RETURN"), remap = false)
+    @Inject(method = "getPossibleDimensionsForSpaceshipTier", at = @At("RETURN"), remap = false)
     private static void getPossibleDimensionsForSpaceshipTier(int tier, EntityPlayerMP playerBase, CallbackInfoReturnable<List<Integer>> cir) {
         List<Integer> temp = cir.getReturnValue();
         if (StarWorldUtil.registeredStars == null) return;
@@ -72,9 +72,10 @@ public abstract class WorldUtilMixin {
     }
 
     @Shadow(remap = false)
-    private static void insertChecklistEntries(CelestialBody body, List<CelestialBody> bodiesDone, List<List<String>> checklistValues) {}
+    private static void insertChecklistEntries(CelestialBody body, List<CelestialBody> bodiesDone, List<List<String>> checklistValues) {
+    }
 
-    @Inject(method="getAllChecklistKeys()Ljava/util/List;", at = @At("RETURN"), locals = LocalCapture.CAPTURE_FAILHARD, remap = false)
+    @Inject(method = "getAllChecklistKeys()Ljava/util/List;", at = @At("RETURN"), locals = LocalCapture.CAPTURE_FAILHARD, remap = false)
     private static void getAllChecklistKeys(CallbackInfoReturnable<List<List<String>>> cir, List<CelestialBody> bodiesDone) {
         for (LandableStar star : StarRegistry.getLandableStars()) {
             insertChecklistEntries(star, bodiesDone, cir.getReturnValue());

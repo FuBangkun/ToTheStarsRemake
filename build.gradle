@@ -145,7 +145,6 @@ dependencies {
         testImplementation 'org.junit.jupiter:junit-jupiter:5.7.1'
         testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
     }
-    implementation 'dev.galacticraft:galacticraft-legacy:4.0.6'
 }
 
 apply from: 'gradle/scripts/dependencies.gradle'
