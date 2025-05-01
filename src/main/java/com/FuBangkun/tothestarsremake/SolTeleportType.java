@@ -1,4 +1,4 @@
-package com.FuBangkun.tothestarsremake.sol;
+package com.FuBangkun.tothestarsremake;
 
 import micdoodle8.mods.galacticraft.api.vector.Vector3;
 import micdoodle8.mods.galacticraft.api.world.ITeleportType;
@@ -13,7 +13,7 @@ import net.minecraft.world.WorldServer;
 
 import java.util.Random;
 
-public class TeleportTypeSol implements ITeleportType {
+public class SolTeleportType implements ITeleportType {
     @Override
     public boolean useParachute() {
         return false;
@@ -26,7 +26,7 @@ public class TeleportTypeSol implements ITeleportType {
 
     @Override
     public Vector3 getEntitySpawnLocation(WorldServer world, Entity entity) {
-        return new Vector3(0.5,  900.0, 0.5);
+        return new Vector3(0.5, 900.0, 0.5);
     }
 
     @Override
@@ -59,5 +59,6 @@ public class TeleportTypeSol implements ITeleportType {
     }
 
     @Override
-    public void setupAdventureSpawn(EntityPlayerMP player) {}
+    public void setupAdventureSpawn(EntityPlayerMP player) {
+    }
 }

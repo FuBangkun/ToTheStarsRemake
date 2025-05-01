@@ -1,7 +1,7 @@
-package com.FuBangkun.tothestarsremake.asm.mixin;
+package com.FuBangkun.tothestarsremake.mixin;
 
-import com.FuBangkun.tothestarsremake.asm.api.LandableStar;
-import com.FuBangkun.tothestarsremake.asm.api.StarRegistry;
+import com.FuBangkun.tothestarsremake.LandableStar;
+import com.FuBangkun.tothestarsremake.StarRegistry;
 import micdoodle8.mods.galacticraft.api.galaxies.CelestialBody;
 import micdoodle8.mods.galacticraft.api.galaxies.GalaxyRegistry;
 import micdoodle8.mods.galacticraft.api.galaxies.Moon;
@@ -18,8 +18,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(GalaxyRegistry.class)
 public abstract class GalaxyRegistryMixin {
-
-
     @Shadow(remap = false)
     public static ImmutableCelestialList<Planet> getPlanets() {
         return null;
@@ -37,18 +35,13 @@ public abstract class GalaxyRegistryMixin {
 
     @Inject(method = "getCelestialBodyFromDimensionID(I)Lmicdoodle8/mods/galacticraft/api/galaxies/CelestialBody;", at = @At("RETURN"), remap = false, cancellable = true)
     private static void getCelestialBodyFromDimensionID(int dimensionID, CallbackInfoReturnable<CelestialBody> cir) {
-        if (cir.getReturnValue() != null) {
-            return;
-        }
-
+        if (cir.getReturnValue() != null) return;
         cir.setReturnValue(StarRegistry.getLandableStarFromDimensionID(dimensionID));
     }
 
     @Inject(method = "register(Ljava/lang/Object;)V", at = @At("RETURN"), remap = false)
     private static <T> void register(T object, CallbackInfo cir) {
-        if (object instanceof LandableStar) {
-            StarRegistry.registerLandableStar((LandableStar) object);
-        }
+        if (object instanceof LandableStar) StarRegistry.registerLandableStar((LandableStar) object);
     }
 
     /**
@@ -57,7 +50,6 @@ public abstract class GalaxyRegistryMixin {
      */
     @Overwrite(remap = false)
     public static ImmutableCelestialList<CelestialBody> getAllReachableBodies() {
-        //@noformat
         assert getPlanets() != null;
         assert getMoons() != null;
         return ImmutableCelestialList.from(
