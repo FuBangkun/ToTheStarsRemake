@@ -123,11 +123,16 @@ public class TTSR {
 
         TTSR.starSol.setBiomeInfo(biomeSolFlat);
 
+        if (event.getSide().isClient()) this.registerFluidModel();
+    }
+
+    @SideOnly(Side.CLIENT)
+    private void registerFluidModel() {
         ModelLoader.setCustomStateMapper(blockSolPlasma, new StateMapperBase() {
             @Nonnull
             @Override
             protected ModelResourceLocation getModelResourceLocation(@Nonnull IBlockState state) {
-                return new ModelResourceLocation("tothestarsremake:sol_plasma", "fluid");
+                return new ModelResourceLocation(Tags.MOD_ID + ":sol_plasma", "fluid");
             }
         });
     }
