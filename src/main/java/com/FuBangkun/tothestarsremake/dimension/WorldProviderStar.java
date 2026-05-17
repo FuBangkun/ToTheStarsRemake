@@ -4,6 +4,7 @@ import com.FuBangkun.tothestarsremake.TTSR;
 import com.FuBangkun.tothestarsremake.helper.TTSRHelper;
 import com.google.common.collect.Lists;
 import micdoodle8.mods.galacticraft.api.galaxies.CelestialBody;
+import micdoodle8.mods.galacticraft.core.util.WorldUtil;
 import micdoodle8.mods.galacticraft.api.prefab.world.gen.WorldProviderSpace;
 import micdoodle8.mods.galacticraft.api.vector.Vector3;
 import micdoodle8.mods.galacticraft.core.event.EventHandlerGC;
@@ -16,12 +17,13 @@ import net.minecraft.world.gen.IChunkGenerator;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Objects;
 
 public class WorldProviderStar extends WorldProviderSpace {
     @Nonnull
     @Override
     public DimensionType getDimensionType() {
-        return TTSR.dimSol;
+        return Objects.requireNonNull(WorldUtil.getDimensionTypeById(this.getDimension()), "Star dimension type is not registered for dimension " + this.getDimension());
     }
 
     @Override
@@ -71,7 +73,7 @@ public class WorldProviderStar extends WorldProviderSpace {
 
     @Override
     public CelestialBody getCelestialBody() {
-        return TTSR.starSol;
+        return micdoodle8.mods.galacticraft.api.galaxies.GalaxyRegistry.getCelestialBodyFromDimensionID(this.getDimension());
     }
 
     @Override

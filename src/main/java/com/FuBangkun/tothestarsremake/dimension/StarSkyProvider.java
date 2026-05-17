@@ -1,15 +1,12 @@
 package com.FuBangkun.tothestarsremake.dimension;
 
-import micdoodle8.mods.galacticraft.core.Constants;
 import micdoodle8.mods.galacticraft.core.util.ConfigManagerCore;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.client.IRenderHandler;
-import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
@@ -18,8 +15,6 @@ import java.util.Random;
 
 @SideOnly(Side.CLIENT)
 public class StarSkyProvider extends IRenderHandler {
-    private static final ResourceLocation overworldTexture = new ResourceLocation(Constants.ASSET_PREFIX, "textures/gui/celestialbodies/earth.png");
-
     public int starList;
     public int glSkyList;
     public int glSkyList2;
@@ -78,11 +73,14 @@ public class StarSkyProvider extends IRenderHandler {
     public void render(float partialTicks, WorldClient world, Minecraft mc) {
         GL11.glDisable(GL11.GL_TEXTURE_2D);
         GlStateManager.disableRescaleNormal();
-        Vec3d vec3 = world.getSkyColor(mc.getRenderViewEntity(), partialTicks);
+        Vec3d vec3 = world.getSkyColor(mc.getRenderViewEntity() == null ? mc.player : mc.getRenderViewEntity(), partialTicks);
         float f1 = (float) vec3.x;
         float f2 = (float) vec3.y;
         float f3 = (float) vec3.z;
         float f6;
+        float f8;
+        float f9;
+        float f10;
 
         if (mc.gameSettings.anaglyph) {
             float f4 = (f1 * 30.0F + f2 * 59.0F + f3 * 11.0F) / 100.0F;
@@ -105,48 +103,12 @@ public class StarSkyProvider extends IRenderHandler {
         GL11.glEnable(GL11.GL_BLEND);
         OpenGlHelper.glBlendFunc(770, 771, 1, 0);
         RenderHelper.disableStandardItemLighting();
-        float f8;
-        float f9;
-        float f10;
-
-        float f18 = world.getStarBrightness(partialTicks);
-
-        if (f18 > 0.0F) {
-            GL11.glPushMatrix();
-            GL11.glRotatef(-90.0F, 0.0F, 1.0F, 0.0F);
-            GL11.glRotatef(world.getCelestialAngle(partialTicks) * 360.0F, 1.0F, 0.0F, 0.0F);
-            GL11.glRotatef(-19.0F, 0, 1.0F, 0);
-            GL11.glColor4f(f18, f18, f18, f18);
-            GL11.glCallList(this.starList);
-            GL11.glPopMatrix();
-        }
         GL11.glDisable(GL11.GL_TEXTURE_2D);
         GL11.glShadeModel(GL11.GL_SMOOTH);
-        GL11.glPushMatrix();
-        GL11.glRotatef(-90.0F, 0.0F, 1.0F, 0.0F);
-        GL11.glRotatef(world.getCelestialAngle(partialTicks) * 360.0F, 1.0F, 0.0F, 0.0F);
-
-        // Render earth
-        f10 = 0.5F;
-        GL11.glScalef(0.6F, 0.6F, 0.6F);
-        GL11.glRotatef(40.0F, 0.0F, 0.0F, 1.0F);
-        GL11.glRotatef(200F, 1.0F, 0.0F, 0.0F);
-        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1F);
-        FMLClientHandler.instance().getClient().renderEngine.bindTexture(StarSkyProvider.overworldTexture);
-        worldRenderer1.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-        worldRenderer1.pos(-f10, -100.0D, f10).tex(0, 1.0).endVertex();
-        worldRenderer1.pos(f10, -100.0D, f10).tex(1.0, 1.0).endVertex();
-        worldRenderer1.pos(f10, -100.0D, -f10).tex(1.0, 0).endVertex();
-        worldRenderer1.pos(-f10, -100.0D, -f10).tex(0, 0).endVertex();
-        tessellator1.draw();
-
-        GL11.glDisable(GL11.GL_TEXTURE_2D);
-
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         GL11.glDisable(GL11.GL_BLEND);
         GL11.glEnable(GL11.GL_ALPHA_TEST);
         GL11.glEnable(GL11.GL_FOG);
-        GL11.glPopMatrix();
         GL11.glDisable(GL11.GL_TEXTURE_2D);
         GL11.glColor3f(0.0F, 0.0F, 0.0F);
         double d0 = mc.player.getPosition().getY() - world.getHorizon();

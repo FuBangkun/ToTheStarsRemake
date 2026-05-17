@@ -1,6 +1,5 @@
 package com.FuBangkun.tothestarsremake.mixin;
 
-import com.FuBangkun.tothestarsremake.celestial.LandableStar;
 import com.FuBangkun.tothestarsremake.celestial.StarRegistry;
 import micdoodle8.mods.galacticraft.api.galaxies.CelestialBody;
 import micdoodle8.mods.galacticraft.api.galaxies.GalaxyRegistry;
@@ -39,10 +38,6 @@ public abstract class GalaxyRegistryMixin {
         cir.setReturnValue(StarRegistry.getLandableStarFromDimensionID(dimensionID));
     }
 
-    @Inject(method = "register(Ljava/lang/Object;)V", at = @At("RETURN"), remap = false)
-    private static <T> void register(T object, CallbackInfo cir) {
-        if (object instanceof LandableStar) StarRegistry.registerLandableStar((LandableStar) object);
-    }
 
     /**
      * @author FuBangkun and Team Galacticraft

@@ -1,45 +1,83 @@
 package com.FuBangkun.tothestarsremake.celestial;
 
-import com.FuBangkun.tothestarsremake.mixin.TTSREarlyInit;
+import com.FuBangkun.tothestarsremake.TTSR;
+import com.FuBangkun.tothestarsremake.dimension.WorldProviderStar;
+import micdoodle8.mods.galacticraft.api.galaxies.Star;
 import micdoodle8.mods.galacticraft.api.GalacticraftRegistry;
-import micdoodle8.mods.galacticraft.core.util.WorldUtil;
-import net.minecraft.world.DimensionType;
-import net.minecraft.world.WorldProvider;
+import micdoodle8.mods.galacticraft.core.Constants;
+import micdoodle8.mods.galacticraft.api.world.EnumAtmosphericGas;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.DimensionManager;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+import java.util.HashSet;
+import java.util.Set;
 
 public class StarWorldUtil {
-    public static List<Integer> registeredStars;
+    private static final int AUTO_STAR_DIMENSION_BASE = -60000;
 
-    public static boolean registerStar(int id, boolean initialiseDimensionAtServerInit, int defaultID) {
-        if (StarWorldUtil.registeredStars == null) {
-            StarWorldUtil.registeredStars = new ArrayList<>();
+    private static final Map<String, Integer> autoStarDimensionIds = new HashMap<>();
+
+    private static final Set<Integer> reservedAutoStarDimensions = new HashSet<>();
+
+    public static void prepareLandableStar(Star star) {
+        if (star == null) {
+            return;
         }
 
-        if (initialiseDimensionAtServerInit) {
-            if (!DimensionManager.isDimensionRegistered(id)) {
-                DimensionManager.registerDimension(id, WorldUtil.getDimensionTypeById(id));
-                TTSREarlyInit.logger.info("Registered Dimension: {}", id);
-                StarWorldUtil.registeredStars.add(id);
-            } else if (DimensionManager.getProviderType(id).getId() == id && GalacticraftRegistry.isDimensionTypeIDRegistered(id)) {
-                TTSREarlyInit.logger.info("Re-registered dimension: {}", id);
-                StarWorldUtil.registeredStars.add(id);
-            } else {
-                TTSREarlyInit.logger.error("Dimension already registered: unable to register planet dimension {}", id);
-                // Add 0 to the list to preserve the correct order of the other planets (e.g. if server/client initialize with different dimension IDs in configs, the order becomes important for figuring out what is going on)
-                registeredStars.add(defaultID);
-                return false;
-            }
-            DimensionType dt = WorldUtil.getDimensionTypeById(id);
-            WorldProvider wp = dt.createDimension();
-            WorldUtil.dimNames.put(id, WorldUtil.getDimensionName(wp));
-            return true;
+        if (star.getDimensionID() == -1 || star.getWorldProvider() == null || !WorldProviderStar.class.equals(star.getWorldProvider())) {
+            int dimensionId = getOrCreateDimensionId(star);
+            star.setDimensionInfo(dimensionId, WorldProviderStar.class);
         }
 
-        // Not to be initialized - still add to the registered stars list (for hot loading later?)
-        StarWorldUtil.registeredStars.add(id);
-        return true;
+        if (star.getTierRequirement() <= 0) {
+            star.setTierRequired(3);
+        }
+
+        if (star.getDimensionSuffix() == null) {
+            star.setDimensionSuffix("_" + star.getName());
+        }
+
+        if (star.getBodyIcon() == null) {
+            star.setBodyIcon(new ResourceLocation(Constants.ASSET_PREFIX, "textures/gui/celestialbodies/sun.png"));
+        }
+
+        if (star.getBiomes() == null && TTSR.biomeSolFlat != null) {
+            star.setBiomeInfo(TTSR.biomeSolFlat);
+        }
+
+        if (star.atmosphere.hasNoGases()) {
+            star.atmosphereComponent(EnumAtmosphericGas.HELIUM).atmosphereComponent(EnumAtmosphericGas.HYDROGEN);
+        }
+
+        if (star.getChecklistKeys().isEmpty()) {
+            star.addChecklistKeys("equip_oxygen_suit", "equip_shield_controller", "thermal_padding_t2");
+        }
+    }
+
+    private static int getOrCreateDimensionId(Star star) {
+        String key = star.getTranslationKey();
+        Integer existing = autoStarDimensionIds.get(key);
+        if (existing != null) {
+            return existing;
+        }
+
+        int hash = Objects.hash(key, star.getParentSolarSystem() == null ? "" : star.getParentSolarSystem().getTranslationKey());
+        int candidate = AUTO_STAR_DIMENSION_BASE - Math.floorMod(hash, 10000);
+        int probe = Math.max(1, Math.abs(Objects.hash(key, "probe")) % 97);
+
+        while (isDimensionIdOccupied(candidate)) {
+            candidate -= probe;
+        }
+
+        autoStarDimensionIds.put(key, candidate);
+        reservedAutoStarDimensions.add(candidate);
+        return candidate;
+    }
+
+    private static boolean isDimensionIdOccupied(int id) {
+        return reservedAutoStarDimensions.contains(id) || DimensionManager.isDimensionRegistered(id) || GalacticraftRegistry.isDimensionTypeIDRegistered(id);
     }
 }
