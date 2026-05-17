@@ -1,5 +1,13 @@
 package com.FuBangkun.tothestarsremake;
 
+import com.FuBangkun.tothestarsremake.block.BlockFluidSunPlasma;
+import com.FuBangkun.tothestarsremake.celestial.LandableStar;
+import com.FuBangkun.tothestarsremake.celestial.StarRegistry;
+import com.FuBangkun.tothestarsremake.celestial.StarWorldUtil;
+import com.FuBangkun.tothestarsremake.dimension.StarSkyProvider;
+import com.FuBangkun.tothestarsremake.dimension.StarTeleportType;
+import com.FuBangkun.tothestarsremake.dimension.WorldProviderStar;
+import com.FuBangkun.tothestarsremake.helper.TTSRHelper;
 import micdoodle8.mods.galacticraft.api.GalacticraftRegistry;
 import micdoodle8.mods.galacticraft.api.galaxies.CelestialBody;
 import micdoodle8.mods.galacticraft.api.galaxies.GalaxyRegistry;
@@ -16,17 +24,13 @@ import micdoodle8.mods.galacticraft.core.util.WorldUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.MaterialLiquid;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.WorldClient;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.client.renderer.block.statemap.StateMapperBase;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.DimensionType;
 import net.minecraft.world.biome.Biome;
-import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
@@ -46,7 +50,6 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.logging.log4j.Logger;
 
-import javax.annotation.Nonnull;
 import java.awt.*;
 import java.io.File;
 import java.util.Arrays;
@@ -99,8 +102,7 @@ public class TTSR {
         solPlasma = FluidRegistry.getFluid("sol_plasma");
 
         if (solPlasma.getBlock() == null) {
-            blockSolPlasma = new BlockFluidSunPlasma(solPlasma, materialSolPlasma).initBlackList()
-                    .setTranslationKey("sol_plasma");
+            blockSolPlasma = new BlockFluidSunPlasma(solPlasma, materialSolPlasma).setTranslationKey("sol_plasma");
             ((BlockFluidSunPlasma) blockSolPlasma).setQuantaPerBlock(3);
             GCBlocks.register(Tags.MOD_ID, blockSolPlasma, ItemBlockDesc.class);
             solPlasma.setBlock(blockSolPlasma);
@@ -122,31 +124,18 @@ public class TTSR {
                 .setTemperature((float) TTSRHelper.realTemperatureToMinecraftTemperature(((double) solPlasma.getTemperature()) - 273.15)));
 
         TTSR.starSol.setBiomeInfo(biomeSolFlat);
-
-        if (event.getSide().isClient()) this.registerFluidModel();
-    }
-
-    @SideOnly(Side.CLIENT)
-    private void registerFluidModel() {
-        ModelLoader.setCustomStateMapper(blockSolPlasma, new StateMapperBase() {
-            @Nonnull
-            @Override
-            protected ModelResourceLocation getModelResourceLocation(@Nonnull IBlockState state) {
-                return new ModelResourceLocation(Tags.MOD_ID + ":sol_plasma", "fluid");
-            }
-        });
     }
 
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
         TTSR.starSol.setBodyIcon(new ResourceLocation(Constants.ASSET_PREFIX, "textures/gui/celestialbodies/sun.png"));
-        TTSR.starSol.setDimensionInfo(dimSolId, WorldProviderSol.class).setTierRequired(3);
+        TTSR.starSol.setDimensionInfo(dimSolId, WorldProviderStar.class).setTierRequired(3);
         TTSR.starSol.atmosphereComponent(EnumAtmosphericGas.HELIUM).atmosphereComponent(EnumAtmosphericGas.HYDROGEN);
         TTSR.starSol.addChecklistKeys("equip_oxygen_suit", "equip_shield_controller", "thermal_padding_t2");
 
         GalaxyRegistry.register(TTSR.starSol);
-        GalacticraftRegistry.registerRocketGui(WorldProviderSol.class, new ResourceLocation(Constants.ASSET_PREFIX, "textures/gui/overworld_rocket_gui.png"));
-        GalacticraftRegistry.registerTeleportType(WorldProviderSol.class, new SolTeleportType());
+        GalacticraftRegistry.registerRocketGui(WorldProviderStar.class, new ResourceLocation(Constants.ASSET_PREFIX, "textures/gui/overworld_rocket_gui.png"));
+        GalacticraftRegistry.registerTeleportType(WorldProviderStar.class, new StarTeleportType());
 
         ForgeRegistries.BIOMES.register(biomeSolFlat);
 
@@ -194,9 +183,9 @@ public class TTSR {
             final WorldClient world = minecraft.world;
 
             if (world != null) {
-                if (world.provider instanceof WorldProviderSol) {
+                if (world.provider instanceof WorldProviderStar) {
                     if (world.provider.getSkyRenderer() == null) {
-                        world.provider.setSkyRenderer(new SolSkyProvider());
+                        world.provider.setSkyRenderer(new StarSkyProvider());
                     }
 
                     if (world.provider.getCloudRenderer() == null) {

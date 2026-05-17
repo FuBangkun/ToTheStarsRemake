@@ -1,4 +1,4 @@
-package com.FuBangkun.tothestarsremake;
+package com.FuBangkun.tothestarsremake.celestial;
 
 import micdoodle8.mods.galacticraft.api.galaxies.SolarSystem;
 import micdoodle8.mods.galacticraft.api.galaxies.Star;

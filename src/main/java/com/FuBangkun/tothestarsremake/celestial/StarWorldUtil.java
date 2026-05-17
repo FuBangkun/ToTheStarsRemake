@@ -1,4 +1,4 @@
-package com.FuBangkun.tothestarsremake;
+package com.FuBangkun.tothestarsremake.celestial;
 
 import com.FuBangkun.tothestarsremake.mixin.TTSREarlyInit;
 import micdoodle8.mods.galacticraft.api.GalacticraftRegistry;
@@ -28,7 +28,7 @@ public class StarWorldUtil {
                 StarWorldUtil.registeredStars.add(id);
             } else {
                 TTSREarlyInit.logger.error("Dimension already registered: unable to register planet dimension {}", id);
-                // Add 0 to the list to preserve the correct order of the other planets (e.g. if server/client initialise with different dimension IDs in configs, the order becomes important for figuring out what is going on)
+                // Add 0 to the list to preserve the correct order of the other planets (e.g. if server/client initialize with different dimension IDs in configs, the order becomes important for figuring out what is going on)
                 registeredStars.add(defaultID);
                 return false;
             }
@@ -38,7 +38,7 @@ public class StarWorldUtil {
             return true;
         }
 
-        // Not to be initialised - still add to the registered stars list (for hotloading later?)
+        // Not to be initialized - still add to the registered stars list (for hot loading later?)
         StarWorldUtil.registeredStars.add(id);
         return true;
     }

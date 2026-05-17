@@ -1,4 +1,4 @@
-package com.FuBangkun.tothestarsremake;
+package com.FuBangkun.tothestarsremake.helper;
 
 public class TTSRHelper {
     private final static double EPSILON = 1e-12;

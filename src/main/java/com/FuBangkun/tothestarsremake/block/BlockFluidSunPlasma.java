@@ -1,4 +1,4 @@
-package com.FuBangkun.tothestarsremake;
+package com.FuBangkun.tothestarsremake.block;
 
 
 import net.minecraft.block.Block;
@@ -15,27 +15,19 @@ import net.minecraftforge.fluids.BlockFluidClassic;
 import net.minecraftforge.fluids.Fluid;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.util.*;
 
 public class BlockFluidSunPlasma extends BlockFluidClassic {
-    private static final List<Integer> blacklist = new ArrayList<>();
+    private static final Set<Integer> blacklist = new HashSet<>(
+            Arrays.asList(
+                    Block.getIdFromBlock(Blocks.AIR),
+                    Block.getIdFromBlock(Blocks.BEDROCK),
+                    Block.getIdFromBlock(Blocks.OBSIDIAN)
+            )
+    );
 
     public BlockFluidSunPlasma(Fluid fluid, Material material) {
         super(fluid, material);
-    }
-
-    /**
-     * To prevent lag in dimensions.
-     *
-     * @return Itself
-     */
-    public BlockFluidSunPlasma initBlackList() {
-        blacklist.addAll(Stream.of(Blocks.AIR, Blocks.BEDROCK, Blocks.OBSIDIAN).map(Block::getIdFromBlock).collect(Collectors.toSet()));
-        return this;
     }
 
     protected boolean canFlowInto(IBlockAccess world, BlockPos pos) {
@@ -69,7 +61,12 @@ public class BlockFluidSunPlasma extends BlockFluidClassic {
     }
 
     public boolean checkOkSurroundings(World world, BlockPos pos) {
-        return checkOk(world, pos.north()) && checkOk(world, pos.east()) && checkOk(world, pos.south()) && checkOk(world, pos.west()) && checkOk(world, pos.north()) && checkOk(world, pos.south());
+        return checkOk(world, pos.north()) &&
+                checkOk(world, pos.east()) &&
+                checkOk(world, pos.south()) &&
+                checkOk(world, pos.west()) &&
+                checkOk(world, pos.up()) &&
+                checkOk(world, pos.down());
     }
 
     public boolean checkOk(World world, BlockPos pos) {

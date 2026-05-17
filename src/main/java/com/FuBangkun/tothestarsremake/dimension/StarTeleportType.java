@@ -1,4 +1,4 @@
-package com.FuBangkun.tothestarsremake;
+package com.FuBangkun.tothestarsremake.dimension;
 
 import micdoodle8.mods.galacticraft.api.vector.Vector3;
 import micdoodle8.mods.galacticraft.api.world.ITeleportType;
@@ -13,7 +13,7 @@ import net.minecraft.world.WorldServer;
 
 import java.util.Random;
 
-public class SolTeleportType implements ITeleportType {
+public class StarTeleportType implements ITeleportType {
     @Override
     public boolean useParachute() {
         return false;

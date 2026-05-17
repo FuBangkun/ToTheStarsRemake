@@ -1,5 +1,7 @@
-package com.FuBangkun.tothestarsremake;
+package com.FuBangkun.tothestarsremake.dimension;
 
+import com.FuBangkun.tothestarsremake.TTSR;
+import com.FuBangkun.tothestarsremake.helper.TTSRHelper;
 import com.google.common.collect.Lists;
 import micdoodle8.mods.galacticraft.api.galaxies.CelestialBody;
 import micdoodle8.mods.galacticraft.api.prefab.world.gen.WorldProviderSpace;
@@ -15,7 +17,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class WorldProviderSol extends WorldProviderSpace {
+public class WorldProviderStar extends WorldProviderSpace {
     @Nonnull
     @Override
     public DimensionType getDimensionType() {
@@ -44,7 +46,7 @@ public class WorldProviderSol extends WorldProviderSpace {
 
     @Override
     public Class<? extends IChunkGenerator> getChunkProviderClass() {
-        return SolChunkProvider.class;
+        return StarChunkProvider.class;
     }
 
     @Override

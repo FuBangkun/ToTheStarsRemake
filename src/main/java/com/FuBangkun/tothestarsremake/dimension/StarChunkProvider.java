@@ -1,5 +1,6 @@
-package com.FuBangkun.tothestarsremake;
+package com.FuBangkun.tothestarsremake.dimension;
 
+import com.FuBangkun.tothestarsremake.TTSR;
 import micdoodle8.mods.galacticraft.api.world.ChunkProviderBase;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.init.Biomes;
@@ -18,7 +19,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Random;
 
-public class SolChunkProvider extends ChunkProviderBase {
+public class StarChunkProvider extends ChunkProviderBase {
 
     private static final FlatGeneratorInfo flatGeneratorInfo;
 
@@ -35,7 +36,7 @@ public class SolChunkProvider extends ChunkProviderBase {
     private final Random rand;
     private final ChunkGeneratorFlat flat;
 
-    public SolChunkProvider(World worldIn, long seed, boolean mapFeaturesEnabled) {
+    public StarChunkProvider(World worldIn, long seed, boolean mapFeaturesEnabled) {
         this.world = worldIn;
         this.rand = new Random(seed);
         this.flat = new ChunkGeneratorFlat(worldIn, seed, mapFeaturesEnabled, flatGeneratorInfo.toString());

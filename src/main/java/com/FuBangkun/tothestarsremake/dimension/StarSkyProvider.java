@@ -1,4 +1,4 @@
-package com.FuBangkun.tothestarsremake;
+package com.FuBangkun.tothestarsremake.dimension;
 
 import micdoodle8.mods.galacticraft.core.Constants;
 import micdoodle8.mods.galacticraft.core.util.ConfigManagerCore;
@@ -17,14 +17,14 @@ import org.lwjgl.opengl.GL11;
 import java.util.Random;
 
 @SideOnly(Side.CLIENT)
-public class SolSkyProvider extends IRenderHandler {
+public class StarSkyProvider extends IRenderHandler {
     private static final ResourceLocation overworldTexture = new ResourceLocation(Constants.ASSET_PREFIX, "textures/gui/celestialbodies/earth.png");
 
     public int starList;
     public int glSkyList;
     public int glSkyList2;
 
-    public SolSkyProvider() {
+    public StarSkyProvider() {
 
         int displayLists = GLAllocation.generateDisplayLists(3);
         this.starList = displayLists;
@@ -132,7 +132,7 @@ public class SolSkyProvider extends IRenderHandler {
         GL11.glRotatef(40.0F, 0.0F, 0.0F, 1.0F);
         GL11.glRotatef(200F, 1.0F, 0.0F, 0.0F);
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1F);
-        FMLClientHandler.instance().getClient().renderEngine.bindTexture(SolSkyProvider.overworldTexture);
+        FMLClientHandler.instance().getClient().renderEngine.bindTexture(StarSkyProvider.overworldTexture);
         worldRenderer1.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
         worldRenderer1.pos(-f10, -100.0D, f10).tex(0, 1.0).endVertex();
         worldRenderer1.pos(f10, -100.0D, f10).tex(1.0, 1.0).endVertex();

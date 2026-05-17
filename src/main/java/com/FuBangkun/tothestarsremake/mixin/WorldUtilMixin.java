@@ -1,8 +1,8 @@
 package com.FuBangkun.tothestarsremake.mixin;
 
-import com.FuBangkun.tothestarsremake.LandableStar;
-import com.FuBangkun.tothestarsremake.StarRegistry;
-import com.FuBangkun.tothestarsremake.StarWorldUtil;
+import com.FuBangkun.tothestarsremake.celestial.LandableStar;
+import com.FuBangkun.tothestarsremake.celestial.StarRegistry;
+import com.FuBangkun.tothestarsremake.celestial.StarWorldUtil;
 import micdoodle8.mods.galacticraft.api.galaxies.CelestialBody;
 import micdoodle8.mods.galacticraft.api.world.IGalacticraftWorldProvider;
 import micdoodle8.mods.galacticraft.core.util.WorldUtil;

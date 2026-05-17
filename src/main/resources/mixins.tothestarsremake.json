@@ -1,12 +1,14 @@
 {
 	"package": "com.FuBangkun.tothestarsremake.mixin",
 	"required": true,
-	"refmap": "mixins.tothestarsremake.refmap.json",
+	"refmap": "${mixin_refmap}",
 	"target": "@env(DEFAULT)",
-	"minVersion": "0.8.7",
+	"minVersion": "0.8.5",
 	"compatibilityLevel": "JAVA_8",
 	"mixins": [
 		"GalaxyRegistryMixin",
 		"WorldUtilMixin"
-	]
+	],
+	"server": [],
+	"client": []
 }
