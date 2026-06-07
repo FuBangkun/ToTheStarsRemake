@@ -46,7 +46,7 @@ import org.apache.logging.log4j.Logger;
 import java.awt.*;
 import java.util.Arrays;
 
-@Mod(modid = Tags.MOD_ID, version = Tags.VERSION, dependencies = "required-after:galacticraftcore;required-after:galacticraftplanets;required-after:mixinbooter@[10.0,);before:asmodeuscore")
+@Mod(modid = Tags.MOD_ID, version = Tags.VERSION, dependencies = "required-after:galacticraftcore;required-after:galacticraftplanets;required-after:mixinbooter@[8.0,);before:asmodeuscore")
 public class TTSR {
     public static final MaterialLiquid materialSolPlasma = new MaterialLiquid(MapColor.YELLOW);
     public static Block blockSolPlasma;
@@ -109,6 +109,10 @@ public class TTSR {
     public void init(FMLInitializationEvent event) {
         GalacticraftRegistry.registerRocketGui(WorldProviderStar.class, new ResourceLocation(Constants.ASSET_PREFIX, "textures/gui/overworld_rocket_gui.png"));
         GalacticraftRegistry.registerTeleportType(WorldProviderStar.class, new StarTeleportType());
+//
+//        for (Star body : StarRegistry.getLandableStars()) {
+//            StarWorldUtil.prepareLandableStar(body);
+//        }
 
         ForgeRegistries.BIOMES.register(biomeSolFlat);
 
