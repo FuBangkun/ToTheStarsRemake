@@ -49,11 +49,7 @@ import java.util.Arrays;
 @Mod(
         modid = Tags.MOD_ID,
         version = Tags.VERSION,
-        dependencies = "required-after:galacticraftcore;" +
-                "required-after:mixinbooter@[8.0,);" +
-                "required-before:asmodeuscore;" +
-                "required-before:galaxyspace;" +
-                "required-before:extraplanets"
+        dependencies = "required-after:galacticraftcore;before:asmodeuscore;"
 )
 public class TTSR {
     public static final MaterialLiquid materialSolPlasma = new MaterialLiquid(MapColor.YELLOW);
