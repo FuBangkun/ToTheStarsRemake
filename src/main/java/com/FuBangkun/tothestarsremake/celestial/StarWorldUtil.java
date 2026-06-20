@@ -2,18 +2,14 @@ package com.FuBangkun.tothestarsremake.celestial;
 
 import com.FuBangkun.tothestarsremake.TTSR;
 import com.FuBangkun.tothestarsremake.dimension.WorldProviderStar;
-import micdoodle8.mods.galacticraft.api.galaxies.Star;
 import micdoodle8.mods.galacticraft.api.GalacticraftRegistry;
-import micdoodle8.mods.galacticraft.core.Constants;
+import micdoodle8.mods.galacticraft.api.galaxies.Star;
 import micdoodle8.mods.galacticraft.api.world.EnumAtmosphericGas;
+import micdoodle8.mods.galacticraft.core.Constants;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.DimensionManager;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 public class StarWorldUtil {
     private static final int AUTO_STAR_DIMENSION_BASE = -60000;
