@@ -46,7 +46,15 @@ import org.apache.logging.log4j.Logger;
 import java.awt.*;
 import java.util.Arrays;
 
-@Mod(modid = Tags.MOD_ID, version = Tags.VERSION, dependencies = "required-after:galacticraftcore;required-after:galacticraftplanets;required-after:mixinbooter@[8.0,);before:asmodeuscore")
+@Mod(
+        modid = Tags.MOD_ID,
+        version = Tags.VERSION,
+        dependencies = "required-after:galacticraftcore;" +
+                "required-after:mixinbooter@[8.0,);" +
+                "required-before:asmodeuscore;" +
+                "required-before:galaxyspace;" +
+                "required-before:extraplanets"
+)
 public class TTSR {
     public static final MaterialLiquid materialSolPlasma = new MaterialLiquid(MapColor.YELLOW);
     public static Block blockSolPlasma;
@@ -133,8 +141,7 @@ public class TTSR {
                     } catch (IllegalArgumentException e) {
                         TTSR.logger.error("Failed to register Forge dimension mapping for {} ({})", body.getTranslationKey(), body.getDimensionID(), e);
                     }
-                }
-                else {
+                } else {
                     body.setUnreachable();
                     TTSR.logger.error("Tried to register dimension for body: {} hit conflict with ID {}", body.getTranslationKey(), body.getDimensionID());
                 }

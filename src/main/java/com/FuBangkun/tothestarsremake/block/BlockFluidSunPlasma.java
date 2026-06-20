@@ -15,7 +15,10 @@ import net.minecraftforge.fluids.BlockFluidClassic;
 import net.minecraftforge.fluids.Fluid;
 
 import javax.annotation.Nonnull;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Random;
+import java.util.Set;
 
 public class BlockFluidSunPlasma extends BlockFluidClassic {
     private static final Set<Integer> blacklist = new HashSet<>(

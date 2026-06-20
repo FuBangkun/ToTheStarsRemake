@@ -51,10 +51,7 @@ public class TTSRHelper {
         return map(temperature, 37.7778 + 273.15, 20.462963 + 273.15, 2.0, 0.8);
     }
 
-    public static double map(double valueCoord1,
-                             double startCoord1, double endCoord1,
-                             double startCoord2, double endCoord2) {
-
+    public static double map(double valueCoord1, double startCoord1, double endCoord1, double startCoord2, double endCoord2) {
         if (Math.abs(endCoord1 - startCoord1) < EPSILON) {
             throw new ArithmeticException("/ 0");
         }

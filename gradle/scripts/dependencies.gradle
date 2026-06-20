@@ -77,6 +77,10 @@ dependencies {
     // }
 
     implementation "curse.maven:galacticraft-legacy-564236:6364107"
+    implementation "curse.maven:galaxy-space-addon-for-galacticraft-238770:7005609"
+    implementation "curse.maven:asmodeuscore-303101:7180991"
+    implementation "curse.maven:extraplanets-241291:5339029"
+    implementation "curse.maven:mjrlegendslib-284331:3344068"
 }
 
 // Need reobfJar to use uber jars, so dependencies that are shaded in are present
