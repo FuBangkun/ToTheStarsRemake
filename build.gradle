@@ -9,11 +9,12 @@ plugins {
     id 'java'
     id 'java-library'
     id 'maven-publish'
-    id 'org.jetbrains.gradle.plugin.idea-ext' version '1.1.7'
-    id 'com.gtnewhorizons.retrofuturagradle' version '1.3.35'
+    id 'org.jetbrains.gradle.plugin.idea-ext' version '1.4.1'
+    id 'com.gtnewhorizons.retrofuturagradle' version '2.0.2'
     id 'com.matthewprenger.cursegradle' version '1.4.0' apply false
     id 'com.modrinth.minotaur' version '2.+' apply false
-    id 'org.jetbrains.changelog' version '2.2.0'
+    id 'org.jetbrains.changelog' version '2.5.0'
+    id 'com.gradleup.shadow' version '9.4.+'
 }
 
 apply from: 'gradle/scripts/helpers.gradle'
@@ -26,11 +27,23 @@ assertProperty 'mod_name'
 
 assertSubProperties 'use_tags', 'tag_class_name'
 assertSubProperties 'use_access_transformer', 'access_transformer_locations'
-assertSubProperties 'use_mixins', 'mixin_booter_version', 'mixin_refmap'
+assertSubProperties 'use_mixins', 'mixin_booter_version', 'mixin_refmap', 'mixin_loading_method'
 assertSubProperties 'is_coremod', 'coremod_includes_mod', 'coremod_plugin_class_name'
 assertSubProperties 'use_asset_mover', 'asset_mover_version'
 
+if (propertyBool('use_mixins')) {
+    def loadingMethod = propertyString('mixin_loading_method')
+    if (loadingMethod == 'connector_class' || loadingMethod == 'both') {
+        assertProperty 'mixin_connector_class'
+    } else if (loadingMethod != 'manifest_configs') {
+        throw new GradleException(
+                "Invalid value for 'mixin_loading_method': [${loadingMethod}]. Must be 'manifest_configs', 'connector_class' or 'both'."
+        )
+    }
+}
+
 setDefaultProperty 'use_modern_java_syntax', false, false
+setDefaultProperty 'use_jetbrains_annotations', false, false
 setDefaultProperty 'generate_sources_jar', true, false
 setDefaultProperty 'generate_javadocs_jar', true, false
 setDefaultProperty 'mapping_channel', true, 'stable'
@@ -48,7 +61,7 @@ base {
     archivesName.set(propertyString('mod_id'))
 }
 
-tasks.decompressDecompiledSources.enabled !propertyBool('change_minecraft_sources')
+tasks.decompressDecompiledSources.enabled !propertyBool('change_minecraft_sources') || !layout.buildDirectory.dir('rfg/minecraft-src').get().asFile.exists()
 
 java {
     toolchain {
@@ -62,11 +75,6 @@ java {
     if (propertyBool('generate_javadocs_jar')) {
         withJavadocJar()
     }
-}
-
-configurations {
-    embed
-    implementation.extendsFrom(embed)
 }
 
 minecraft {
@@ -94,9 +102,13 @@ minecraft {
 
     if (propertyBool('use_tags')) {
         if (file('tags.properties').exists()) {
-            Properties props = new Properties().tap {  it.load(file('tags.properties').newInputStream()); it }
+            Properties props = new Properties().tap { it.load(file('tags.properties').newInputStream()); it }
             if (!props.isEmpty()) {
-                injectedTags.set(props.collectEntries { k, v -> [(k): interpolate(v)] })
+                injectedTags.set(props.collectEntries { k, v ->
+                    def interpolated = interpolate(v)
+                    if (interpolated == null || interpolated.isEmpty()) throw new GradleException("Empty tag value found for key: $k")
+                    [(k): interpolated]
+                })
             }
         }
     }
@@ -107,7 +119,6 @@ repositories {
         name 'CleanroomMC Maven'
         url 'https://maven.cleanroommc.com'
     }
-    maven { url = 'https://maven.galacticraft.net/repository/legacy/' }
 }
 
 dependencies {
@@ -126,20 +137,18 @@ dependencies {
             transitive = false // We only care about the 1 annotation class
         }
     }
+    if (propertyBool('use_jetbrains_annotations')) {
+        compileOnly 'org.jetbrains:annotations:26.1.0'
+    }
     if (propertyBool('use_asset_mover')) {
         implementation "com.cleanroommc:assetmover:${propertyString('asset_mover_version')}"
     }
     if (propertyBool('use_mixins')) {
         String mixin = modUtils.enableMixins("zone.rong:mixinbooter:${propertyString('mixin_booter_version')}", propertyString('mixin_refmap'))
-        api (mixin) {
+        implementation (mixin) {
             transitive = false
         }
-        annotationProcessor 'org.ow2.asm:asm-debug-all:5.2'
-        annotationProcessor 'com.google.guava:guava:24.1.1-jre'
-        annotationProcessor 'com.google.code.gson:gson:2.8.6'
-        annotationProcessor (mixin) {
-            transitive = false
-        }
+        annotationProcessor mixin
     }
     if (propertyBool('enable_junit_testing')) {
         testImplementation 'org.junit.jupiter:junit-jupiter:5.7.1'
@@ -164,6 +173,19 @@ if (propertyBool('use_access_transformer')) {
 
 processResources {
 
+    inputs.property 'mod_id', propertyString('mod_id')
+    inputs.property 'mod_name', propertyString('mod_name')
+    inputs.property 'mod_version', propertyString('mod_version')
+    inputs.property 'mod_description', propertyString('mod_description')
+    inputs.property 'mod_authors', "${propertyStringList('mod_authors', ',').join(', ')}"
+    inputs.property 'mod_credits', propertyString('mod_credits')
+    inputs.property 'mod_url', propertyString('mod_url')
+    inputs.property 'mod_update_json', propertyString('mod_update_json')
+    inputs.property 'mod_logo_path', propertyString('mod_logo_path')
+    inputs.property 'mixin_refmap', propertyString('mixin_refmap')
+    inputs.property 'mixin_package', propertyString('mixin_package')
+    inputs.property 'mixin_configs', propertyStringList('mixin_configs').join(' ')
+
     def filterList = ['mcmod.info', 'pack.mcmeta']
     filterList.addAll(propertyStringList('mixin_configs').collect(config -> "mixins.${config}.json" as String))
 
@@ -173,7 +195,7 @@ processResources {
                 'mod_name': propertyString('mod_name'),
                 'mod_version': propertyString('mod_version'),
                 'mod_description': propertyString('mod_description'),
-                'mod_authors': "[${propertyStringList('mod_authors', ',').join(', ')}]",
+                'mod_authors': "${propertyStringList('mod_authors', ',').join(', ')}",
                 'mod_credits': propertyString('mod_credits'),
                 'mod_url': propertyString('mod_url'),
                 'mod_update_json': propertyString('mod_update_json'),
@@ -205,10 +227,20 @@ jar {
         if (propertyBool('use_access_transformer')) {
             attribute_map['FMLAT'] = propertyString('access_transformer_locations')
         }
+        if (propertyBool('use_mixins')) {
+            def loadingMethod = propertyString('mixin_loading_method')
+            if (loadingMethod == 'manifest_configs' || loadingMethod == 'both') {
+                def mixinList = propertyStringList('mixin_configs').collect { "mixins.${it}.json" }.join(' ')
+                if (!mixinList.isEmpty()) {
+                    attribute_map['MixinConfigs'] = mixinList
+                }
+            }
+            if (loadingMethod == 'connector_class' || loadingMethod == 'both') {
+                attribute_map['MixinConnector'] = propertyString('mixin_connector_class')
+            }
+        }
         attributes(attribute_map)
     }
-    // Add all embedded dependencies into the jar
-    from(provider{ configurations.embed.collect {it.isDirectory() ? it : zipTree(it)} })
 }
 
 idea {
@@ -218,6 +250,9 @@ idea {
     project {
         settings {
             runConfigurations {
+                "0. Setup Decomp Workspace"(Gradle) {
+                    taskNames = ["setupDecompWorkspace"]
+                }
                 "1. Run Client"(Gradle) {
                     taskNames = ["runClient"]
                 }
@@ -284,7 +319,7 @@ tasks.register('generateMixinJson') {
     doLast {
         for (String mixinConfig : missingConfig) {
             def file = file("src/main/resources/mixins.${mixinConfig}.json")
-            file << """{\n\t"package": "",\n\t"required": true,\n\t"refmap": "${mixin_refmap}",\n\t"target": "@env(DEFAULT)",\n\t"minVersion": "0.8.5",\n\t"compatibilityLevel": "JAVA_8",\n\t"mixins": [],\n\t"server": [],\n\t"client": []\n}"""
+            file << """{\n\t"package": "",\n\t"required": true,\n\t"refmap": "${propertyString('mixin_refmap')}",\n\t"target": "@env(DEFAULT)",\n\t"minVersion": "0.8.5",\n\t"compatibilityLevel": "JAVA_8",\n\t"mixins": [],\n\t"server": [],\n\t"client": []\n}"""
         }
     }
 }
