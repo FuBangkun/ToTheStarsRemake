@@ -1,0 +1,22 @@
+{
+  "package": "com.fubangkun.tothestarsremake.mixin",
+  "plugin": "com.fubangkun.tothestarsremake.mixin.TTSRMixinConfigPlugin",
+  "refmap": "${mixin_refmap}",
+  "required": true,
+  "target": "@env(DEFAULT)",
+  "minVersion": "0.8.7",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+    "BlockAccessor",
+    "GalaxyRegistryMixin",
+    "SolarSystemMixin",
+    "WorldUtilMixin"
+  ],
+  "server": [],
+  "client": [
+    "GuiCelestialSelectionMixin",
+    "asmodeuscore.NewGuiCelestialSelectionMixin",
+    "extraplanets.CustomCelestialSelectionMixin"
+  ],
+  "setSourceFile": true
+}

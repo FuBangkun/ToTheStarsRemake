@@ -10,11 +10,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(value = SolarSystem.class, remap = false)
 public abstract class SolarSystemMixin {
-	@Inject(method = "setMainStar", at = @At("RETURN"))
-	private void setMainStar(Star star, CallbackInfoReturnable<SolarSystem> cir) {
-		if (star == null) {
-			return;
-		}
-		StarRegistry.registerLandableStar(star);
-	}
+    @Inject(method = "setMainStar", at = @At("RETURN"))
+    private void setMainStar(Star star, CallbackInfoReturnable<SolarSystem> cir) {
+        if (star == null) {
+            return;
+        }
+        StarRegistry.registerLandableStar(star);
+    }
 }

@@ -2,6 +2,7 @@ package com.fubangkun.tothestarsremake;
 
 import com.fubangkun.tothestarsremake.block.BlockFluidSunPlasma;
 import com.fubangkun.tothestarsremake.celestial.StarRegistry;
+import com.fubangkun.tothestarsremake.celestial.StarWorldUtil;
 import com.fubangkun.tothestarsremake.dimension.StarSkyProvider;
 import com.fubangkun.tothestarsremake.dimension.StarTeleportType;
 import com.fubangkun.tothestarsremake.dimension.WorldProviderStar;
@@ -47,139 +48,141 @@ import java.awt.*;
 import java.util.Arrays;
 
 @Mod(
-		modid = Tags.MOD_ID,
-		name = Tags.MOD_NAME,
-		version = Tags.VERSION,
-		dependencies = "required-after:galacticraftcore;required-after:mixinbooter@[11.0,);after:asmodeuscore;after:extraplanets"
+        modid = Reference.MOD_ID,
+        name = Reference.MOD_NAME,
+        version = Reference.VERSION,
+        dependencies = "required-after:galacticraftcore;required-after:mixinbooter@[11.0,);after:asmodeuscore;after:extraplanets"
 )
 public class TTSR {
-	public static final MaterialLiquid materialSolPlasma = new MaterialLiquid(MapColor.YELLOW);
-	public static Block blockSolPlasma;
-	public static Logger logger;
-	public static Fluid solPlasma;
-	public static Fluid solPlasmaTTSR;
-	public static Biome biomeSolFlat;
+    public static final MaterialLiquid materialSolPlasma = new MaterialLiquid(MapColor.YELLOW);
+    public static Block blockSolPlasma;
+    public static Logger logger;
+    public static Fluid solPlasma;
+    public static Fluid solPlasmaTTSR;
+    public static Biome biomeSolFlat;
 
-	static {
-		FluidRegistry.enableUniversalBucket();
-	}
+    static {
+        FluidRegistry.enableUniversalBucket();
+    }
 
-	@Mod.EventHandler
-	public void preInit(FMLPreInitializationEvent event) {
-		logger = event.getModLog();
+    @Mod.EventHandler
+    public void preInit(FMLPreInitializationEvent event) {
+        logger = event.getModLog();
 
-		if (!FluidRegistry.isFluidRegistered("sol_plasma")) {
-			solPlasmaTTSR = new Fluid("sol_plasma",
-					new ResourceLocation(Tags.MOD_ID, "blocks/fluids/sol_plasma_still"),
-					new ResourceLocation(Tags.MOD_ID, "blocks/fluids/sol_plasma_flow"),
-					Color.YELLOW)
-					.setDensity((int) Math.round(TTSRHelper.realDensityToForgeDensity(1410.0))) // 1410.0 kg/(m^3)
-					.setLuminosity(15)
-					.setViscosity((int) Math.round(TTSRHelper.realViscosityToForgeViscosity(0.000041))) // 4.1 x 10^-5 Pa-s
-					.setTemperature(5778) //5778 K
-					.setFillSound(SoundEvents.ITEM_BUCKET_FILL_LAVA)
-					.setEmptySound(SoundEvents.ITEM_BUCKET_EMPTY_LAVA)
-					.setRarity(EnumRarity.RARE);
-			FluidRegistry.registerFluid(solPlasmaTTSR);
-		} else {
-			TTSR.logger.info("ToTheStarsRemake Sol Plasma Fluid is not default, issues may occur.");
-		}
+        if (!FluidRegistry.isFluidRegistered("sol_plasma")) {
+            solPlasmaTTSR = new Fluid("sol_plasma",
+                    new ResourceLocation(Reference.MOD_ID, "blocks/fluids/sol_plasma_still"),
+                    new ResourceLocation(Reference.MOD_ID, "blocks/fluids/sol_plasma_flow"),
+                    Color.YELLOW)
+                    .setDensity((int) Math.round(TTSRHelper.realDensityToForgeDensity(1410.0))) // 1410.0 kg/(m^3)
+                    .setLuminosity(15)
+                    .setViscosity((int) Math.round(TTSRHelper.realViscosityToForgeViscosity(0.000041))) // 4.1 x 10^-5 Pa-s
+                    .setTemperature(5778) //5778 K
+                    .setFillSound(SoundEvents.ITEM_BUCKET_FILL_LAVA)
+                    .setEmptySound(SoundEvents.ITEM_BUCKET_EMPTY_LAVA)
+                    .setRarity(EnumRarity.RARE);
+            FluidRegistry.registerFluid(solPlasmaTTSR);
+        } else {
+            TTSR.logger.info("ToTheStarsRemake Sol Plasma Fluid is not default, issues may occur.");
+        }
 
-		solPlasma = FluidRegistry.getFluid("sol_plasma");
+        solPlasma = FluidRegistry.getFluid("sol_plasma");
 
-		if (solPlasma.getBlock() == null) {
-			blockSolPlasma = new BlockFluidSunPlasma(solPlasma, materialSolPlasma).setTranslationKey("sol_plasma");
-			((BlockFluidSunPlasma) blockSolPlasma).setQuantaPerBlock(3);
-			GCBlocks.register(Tags.MOD_ID, blockSolPlasma, ItemBlockDesc.class);
-			solPlasma.setBlock(blockSolPlasma);
-		} else {
-			TTSR.logger.info("ToTheStarsRemake Sol Plasma Block is not default, issues may occur.");
-			blockSolPlasma = solPlasma.getBlock();
-		}
+        if (solPlasma.getBlock() == null) {
+            blockSolPlasma = new BlockFluidSunPlasma(solPlasma, materialSolPlasma).setTranslationKey("sol_plasma");
+            ((BlockFluidSunPlasma) blockSolPlasma).setQuantaPerBlock(3);
+            GCBlocks.register(Reference.MOD_ID, blockSolPlasma, ItemBlockDesc.class);
+            solPlasma.setBlock(blockSolPlasma);
+        } else {
+            TTSR.logger.info("ToTheStarsRemake Sol Plasma Block is not default, issues may occur.");
+            blockSolPlasma = solPlasma.getBlock();
+        }
 
-		if (blockSolPlasma != null) {
-			FluidRegistry.addBucketForFluid(solPlasma);
-		}
+        if (blockSolPlasma != null) {
+            FluidRegistry.addBucketForFluid(solPlasma);
+        }
 
-		biomeSolFlat = new BiomeSolGen(new Biome.BiomeProperties("sol")
-				.setBaseHeight(1.5F)
-				.setHeightVariation(0.4F)
-				.setRainfall(0.0F)
-				.setRainDisabled()
-				.setWaterColor(0xFFFF00)
-				.setTemperature((float) TTSRHelper.realTemperatureToMinecraftTemperature(((double) solPlasma.getTemperature()) - 273.15)));
-	}
+        biomeSolFlat = new BiomeSolGen(new Biome.BiomeProperties("sol")
+                .setBaseHeight(1.5F)
+                .setHeightVariation(0.4F)
+                .setRainfall(0.0F)
+                .setRainDisabled()
+                .setWaterColor(0xFFFF00)
+                .setTemperature((float) TTSRHelper.realTemperatureToMinecraftTemperature(((double) solPlasma.getTemperature()) - 273.15)));
+    }
 
-	@Mod.EventHandler
-	public void init(FMLInitializationEvent event) {
-		GalacticraftRegistry.registerRocketGui(WorldProviderStar.class, new ResourceLocation(Constants.ASSET_PREFIX, "textures/gui/overworld_rocket_gui.png"));
-		GalacticraftRegistry.registerTeleportType(WorldProviderStar.class, new StarTeleportType());
+    @Mod.EventHandler
+    public void init(FMLInitializationEvent event) {
+        GalacticraftRegistry.registerRocketGui(WorldProviderStar.class, new ResourceLocation(Constants.ASSET_PREFIX, "textures/gui/overworld_rocket_gui.png"));
+        GalacticraftRegistry.registerTeleportType(WorldProviderStar.class, new StarTeleportType());
 
-		ForgeRegistries.BIOMES.register(biomeSolFlat);
+        ForgeRegistries.BIOMES.register(biomeSolFlat);
 
-		MinecraftForge.EVENT_BUS.register(new TickHandlerClient());
-	}
+        MinecraftForge.EVENT_BUS.register(new TickHandlerClient());
+    }
 
-	@Mod.EventHandler
-	public void postInit(FMLPostInitializationEvent event) {
-		for (Star body : StarRegistry.getLandableStars()) {
-			if (body.shouldAutoRegister()) {
-				int id = Arrays.binarySearch(ConfigManagerCore.staticLoadDimensions, body.getDimensionID());
-				DimensionType type = GalacticraftRegistry.registerDimension(body.getTranslationKey(), body.getDimensionSuffix(), body.getDimensionID(), body.getWorldProvider(), body.getForceStaticLoad() || id < 0);
-				if (type != null) {
-					body.initialiseMobSpawns();
-				}
-				if (type != null && !DimensionManager.isDimensionRegistered(body.getDimensionID())) {
-					try {
-						DimensionManager.registerDimension(body.getDimensionID(), type);
-						WorldUtil.dimNames.put(body.getDimensionID(), body.getTranslationKey());
-					} catch (IllegalArgumentException e) {
-						TTSR.logger.error("Failed to register Forge dimension mapping for {} ({})", body.getTranslationKey(), body.getDimensionID(), e);
-					}
-				} else {
-					body.setUnreachable();
-					TTSR.logger.error("Tried to register dimension for body: {} hit conflict with ID {}", body.getTranslationKey(), body.getDimensionID());
-				}
-			}
+    @Mod.EventHandler
+    public void postInit(FMLPostInitializationEvent event) {
+        for (Star body : StarRegistry.getLandableStars()) {
+            StarWorldUtil.ensureBiomeInfo(body);
 
-			if (body.getSurfaceBlocks() != null) {
-				TransformerHooks.spawnListAE2_GC.addAll(body.getSurfaceBlocks());
-			}
-		}
-	}
+            if (body.shouldAutoRegister()) {
+                int id = Arrays.binarySearch(ConfigManagerCore.staticLoadDimensions, body.getDimensionID());
+                DimensionType type = GalacticraftRegistry.registerDimension(body.getTranslationKey(), body.getDimensionSuffix(), body.getDimensionID(), body.getWorldProvider(), body.getForceStaticLoad() || id < 0);
+                if (type != null) {
+                    body.initialiseMobSpawns();
+                }
+                if (type != null && !DimensionManager.isDimensionRegistered(body.getDimensionID())) {
+                    try {
+                        DimensionManager.registerDimension(body.getDimensionID(), type);
+                        WorldUtil.dimNames.put(body.getDimensionID(), body.getTranslationKey());
+                    } catch (IllegalArgumentException e) {
+                        TTSR.logger.error("Failed to register Forge dimension mapping for {} ({})", body.getTranslationKey(), body.getDimensionID(), e);
+                    }
+                } else {
+                    body.setUnreachable();
+                    TTSR.logger.error("Tried to register dimension for body: {} hit conflict with ID {}", body.getTranslationKey(), body.getDimensionID());
+                }
+            }
+
+            if (body.getSurfaceBlocks() != null) {
+                TransformerHooks.spawnListAE2_GC.addAll(body.getSurfaceBlocks());
+            }
+        }
+    }
 
 
-	public static class TickHandlerClient {
-		@SideOnly(Side.CLIENT)
-		@SubscribeEvent
-		public void onClientTick(TickEvent.ClientTickEvent event) {
-			final Minecraft minecraft = FMLClientHandler.instance().getClient();
+    public static class TickHandlerClient {
+        @SideOnly(Side.CLIENT)
+        @SubscribeEvent
+        public void onClientTick(TickEvent.ClientTickEvent event) {
+            final Minecraft minecraft = FMLClientHandler.instance().getClient();
 
-			final WorldClient world = minecraft.world;
+            final WorldClient world = minecraft.world;
 
-			if (world != null) {
-				if (world.provider instanceof WorldProviderStar) {
-					if (world.provider.getSkyRenderer() == null) {
-						world.provider.setSkyRenderer(new StarSkyProvider());
-					}
+            if (world != null) {
+                if (world.provider instanceof WorldProviderStar) {
+                    if (world.provider.getSkyRenderer() == null) {
+                        world.provider.setSkyRenderer(new StarSkyProvider());
+                    }
 
-					if (world.provider.getCloudRenderer() == null) {
-						world.provider.setCloudRenderer(new CloudRenderer());
-					}
-				}
-			}
-		}
-	}
+                    if (world.provider.getCloudRenderer() == null) {
+                        world.provider.setCloudRenderer(new CloudRenderer());
+                    }
+                }
+            }
+        }
+    }
 
-	private static class BiomeSolGen extends BiomeGenBaseGC {
-		public BiomeSolGen(BiomeProperties var1) {
-			super(var1, true);
-		}
+    private static class BiomeSolGen extends BiomeGenBaseGC {
+        public BiomeSolGen(BiomeProperties var1) {
+            super(var1, true);
+        }
 
-		@Override
-		public void registerTypes(Biome b) {
-			BiomeDictionary.addTypes(b, BiomeDictionary.Type.HOT, BiomeDictionary.Type.DEAD);
-			super.registerTypes(b);
-		}
-	}
+        @Override
+        public void registerTypes(Biome b) {
+            BiomeDictionary.addTypes(b, BiomeDictionary.Type.HOT, BiomeDictionary.Type.DEAD);
+            super.registerTypes(b);
+        }
+    }
 }

@@ -19,85 +19,85 @@ import java.util.List;
 
 @Mixin(value = WorldUtil.class, remap = false)
 public abstract class WorldUtilMixin {
-	@Inject(method = "getReachableCelestialBodiesForDimensionID", at = @At("RETURN"), cancellable = true)
-	private static void getReachableCelestialBodiesForDimensionID(int id, CallbackInfoReturnable<CelestialBody> cir) {
-		for (Star cBody : StarRegistry.getLandableStars()) {
-			if (cBody.isReachable()) {
-				if (cBody.getDimensionID() == id) {
-					cir.setReturnValue(cBody);
-				}
-			}
-		}
-	}
+    @Inject(method = "getReachableCelestialBodiesForDimensionID", at = @At("RETURN"), cancellable = true)
+    private static void getReachableCelestialBodiesForDimensionID(int id, CallbackInfoReturnable<CelestialBody> cir) {
+        for (Star cBody : StarRegistry.getLandableStars()) {
+            if (cBody.isReachable()) {
+                if (cBody.getDimensionID() == id) {
+                    cir.setReturnValue(cBody);
+                }
+            }
+        }
+    }
 
-	@Inject(method = "getReachableCelestialBodiesForName", at = @At("RETURN"), cancellable = true)
-	private static void getReachableCelestialBodiesForName(String name, CallbackInfoReturnable<CelestialBody> cir) {
-		for (CelestialBody cBody : StarRegistry.getLandableStars()) {
-			if (cBody.isReachable()) {
-				if (cBody.getName().equals(name)) {
-					cir.setReturnValue(cBody);
-				}
-			}
-		}
-	}
+    @Inject(method = "getReachableCelestialBodiesForName", at = @At("RETURN"), cancellable = true)
+    private static void getReachableCelestialBodiesForName(String name, CallbackInfoReturnable<CelestialBody> cir) {
+        for (CelestialBody cBody : StarRegistry.getLandableStars()) {
+            if (cBody.isReachable()) {
+                if (cBody.getName().equals(name)) {
+                    cir.setReturnValue(cBody);
+                }
+            }
+        }
+    }
 
-	@Inject(method = "getArrayOfPossibleDimensions", at = @At("RETURN"))
-	private static void getArrayOfPossibleDimensions(int tier, EntityPlayerMP playerBase, CallbackInfoReturnable<HashMap<String, Integer>> cir) {
-		for (CelestialBody body : StarRegistry.getLandableStars()) {
-			if (!body.isReachable()) {
-				cir.getReturnValue().put(body.getTranslatedName() + "*", body.getDimensionID());
-			}
-		}
-	}
+    @Inject(method = "getArrayOfPossibleDimensions", at = @At("RETURN"))
+    private static void getArrayOfPossibleDimensions(int tier, EntityPlayerMP playerBase, CallbackInfoReturnable<HashMap<String, Integer>> cir) {
+        for (CelestialBody body : StarRegistry.getLandableStars()) {
+            if (!body.isReachable()) {
+                cir.getReturnValue().put(body.getTranslatedName() + "*", body.getDimensionID());
+            }
+        }
+    }
 
-	@Inject(method = "getPossibleDimensionsForSpaceshipTier", at = @At("RETURN"))
-	private static void getPossibleDimensionsForSpaceshipTier(int tier, EntityPlayerMP playerBase, CallbackInfoReturnable<List<Integer>> cir) {
-		List<Integer> temp = cir.getReturnValue();
-		for (Star star : StarRegistry.getLandableStars()) {
-			WorldProvider provider = WorldUtil.getProviderForDimensionServer(star.getDimensionID());
+    @Inject(method = "getPossibleDimensionsForSpaceshipTier", at = @At("RETURN"))
+    private static void getPossibleDimensionsForSpaceshipTier(int tier, EntityPlayerMP playerBase, CallbackInfoReturnable<List<Integer>> cir) {
+        List<Integer> temp = cir.getReturnValue();
+        for (Star star : StarRegistry.getLandableStars()) {
+            WorldProvider provider = WorldUtil.getProviderForDimensionServer(star.getDimensionID());
 
-			if (provider != null) {
-				if (provider instanceof IGalacticraftWorldProvider) {
-					if (((IGalacticraftWorldProvider) provider).canSpaceshipTierPass(tier)) {
-						temp.add(star.getDimensionID());
-					}
-				} else {
-					temp.add(star.getDimensionID());
-				}
-			}
-		}
-	}
+            if (provider != null) {
+                if (provider instanceof IGalacticraftWorldProvider) {
+                    if (((IGalacticraftWorldProvider) provider).canSpaceshipTierPass(tier)) {
+                        temp.add(star.getDimensionID());
+                    }
+                } else {
+                    temp.add(star.getDimensionID());
+                }
+            }
+        }
+    }
 
-	@Shadow
-	private static void insertChecklistEntries(CelestialBody body, List<CelestialBody> bodiesDone, List<List<String>> checklistValues) {
-	}
+    @Shadow
+    private static void insertChecklistEntries(CelestialBody body, List<CelestialBody> bodiesDone, List<List<String>> checklistValues) {
+    }
 
-	/**
-	 * @author FuBangkun and Team Galacticraft
-	 * @reason Keep GC's checklist ordering, but also include addon stars.
-	 */
-	@Overwrite
-	public static List<List<String>> getAllChecklistKeys() {
-		List<List<String>> checklistValues = Lists.newArrayList();
-		@SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
-		List<CelestialBody> bodiesDone = Lists.newArrayList();
+    /**
+     * @author FuBangkun and Team Galacticraft
+     * @reason Keep GC's checklist ordering, but also include addon stars.
+     */
+    @Overwrite
+    public static List<List<String>> getAllChecklistKeys() {
+        List<List<String>> checklistValues = Lists.newArrayList();
+        @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
+        List<CelestialBody> bodiesDone = Lists.newArrayList();
 
-		for (Planet planet : GalaxyRegistry.getPlanets()) {
-			insertChecklistEntries(planet, bodiesDone, checklistValues);
-		}
+        for (Planet planet : GalaxyRegistry.getPlanets()) {
+            insertChecklistEntries(planet, bodiesDone, checklistValues);
+        }
 
-		for (Moon moon : GalaxyRegistry.getMoons()) {
-			insertChecklistEntries(moon, bodiesDone, checklistValues);
-		}
+        for (Moon moon : GalaxyRegistry.getMoons()) {
+            insertChecklistEntries(moon, bodiesDone, checklistValues);
+        }
 
-		for (Satellite satellite : GalaxyRegistry.getSatellites()) {
-			insertChecklistEntries(satellite, bodiesDone, checklistValues);
-		}
+        for (Satellite satellite : GalaxyRegistry.getSatellites()) {
+            insertChecklistEntries(satellite, bodiesDone, checklistValues);
+        }
 
-		for (Star star : StarRegistry.getLandableStars()) {
-			insertChecklistEntries(star, bodiesDone, checklistValues);
-		}
+        for (Star star : StarRegistry.getLandableStars()) {
+            insertChecklistEntries(star, bodiesDone, checklistValues);
+        }
 
-		return checklistValues;
-	}
+        return checklistValues;
+    }
 }

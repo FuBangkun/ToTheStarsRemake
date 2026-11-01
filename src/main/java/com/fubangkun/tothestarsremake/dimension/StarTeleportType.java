@@ -14,51 +14,51 @@ import net.minecraft.world.WorldServer;
 import java.util.Random;
 
 public class StarTeleportType implements ITeleportType {
-	@Override
-	public boolean useParachute() {
-		return false;
-	}
+    @Override
+    public boolean useParachute() {
+        return false;
+    }
 
-	@Override
-	public Vector3 getPlayerSpawnLocation(WorldServer world, EntityPlayerMP player) {
-		return new Vector3(0.5, ConfigManagerCore.disableLander ? 250.0 : 900.0, 0.5);
-	}
+    @Override
+    public Vector3 getPlayerSpawnLocation(WorldServer world, EntityPlayerMP player) {
+        return new Vector3(0.5, ConfigManagerCore.disableLander ? 250.0 : 900.0, 0.5);
+    }
 
-	@Override
-	public Vector3 getEntitySpawnLocation(WorldServer world, Entity entity) {
-		return new Vector3(0.5, 900.0, 0.5);
-	}
+    @Override
+    public Vector3 getEntitySpawnLocation(WorldServer world, Entity entity) {
+        return new Vector3(0.5, 900.0, 0.5);
+    }
 
-	@Override
-	public Vector3 getParaChestSpawnLocation(WorldServer world, EntityPlayerMP player, Random rand) {
-		return null;
-	}
+    @Override
+    public Vector3 getParaChestSpawnLocation(WorldServer world, EntityPlayerMP player, Random rand) {
+        return null;
+    }
 
-	@Override
-	public void onSpaceDimensionChanged(World newWorld, EntityPlayerMP player, boolean ridingAutoRocket) {
-		if (!ridingAutoRocket && player != null) {
-			GCPlayerStats stats = GCPlayerStats.get(player);
+    @Override
+    public void onSpaceDimensionChanged(World newWorld, EntityPlayerMP player, boolean ridingAutoRocket) {
+        if (!ridingAutoRocket && player != null) {
+            GCPlayerStats stats = GCPlayerStats.get(player);
 
-			if (stats.getTeleportCooldown() <= 0) {
-				if (player.capabilities.isFlying) {
-					player.capabilities.isFlying = false;
-				}
+            if (stats.getTeleportCooldown() <= 0) {
+                if (player.capabilities.isFlying) {
+                    player.capabilities.isFlying = false;
+                }
 
-				EntityEntryPodVenus lander = new EntityEntryPodVenus(player);
+                EntityEntryPodVenus lander = new EntityEntryPodVenus(player);
 
-				if (!newWorld.isRemote) {
-					boolean previous = CompatibilityManager.forceLoadChunks((WorldServer) newWorld);
-					lander.forceSpawn = true;
-					newWorld.spawnEntity(lander);
-					CompatibilityManager.forceLoadChunksEnd((WorldServer) newWorld, previous);
-				}
+                if (!newWorld.isRemote) {
+                    boolean previous = CompatibilityManager.forceLoadChunks((WorldServer) newWorld);
+                    lander.forceSpawn = true;
+                    newWorld.spawnEntity(lander);
+                    CompatibilityManager.forceLoadChunksEnd((WorldServer) newWorld, previous);
+                }
 
-				stats.setTeleportCooldown(10);
-			}
-		}
-	}
+                stats.setTeleportCooldown(10);
+            }
+        }
+    }
 
-	@Override
-	public void setupAdventureSpawn(EntityPlayerMP player) {
-	}
+    @Override
+    public void setupAdventureSpawn(EntityPlayerMP player) {
+    }
 }

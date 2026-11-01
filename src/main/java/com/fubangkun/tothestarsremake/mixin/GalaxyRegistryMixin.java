@@ -17,41 +17,41 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(value = GalaxyRegistry.class, remap = false)
 public abstract class GalaxyRegistryMixin {
-	@Shadow
-	public static ImmutableCelestialList<Planet> getPlanets() {
-		return null;
-	}
+    @Shadow
+    public static ImmutableCelestialList<Planet> getPlanets() {
+        return null;
+    }
 
-	@Shadow
-	public static ImmutableCelestialList<Moon> getMoons() {
-		return null;
-	}
+    @Shadow
+    public static ImmutableCelestialList<Moon> getMoons() {
+        return null;
+    }
 
-	@Inject(method = "refreshGalaxies", at = @At("HEAD"))
-	private static void refreshGalaxies(CallbackInfo ci) {
-		StarRegistry.refreshLandableStarsInGalaxies();
-	}
+    @Inject(method = "refreshGalaxies", at = @At("HEAD"))
+    private static void refreshGalaxies(CallbackInfo ci) {
+        StarRegistry.refreshLandableStarsInGalaxies();
+    }
 
-	@Inject(method = "getCelestialBodyFromDimensionID", at = @At("RETURN"), cancellable = true)
-	private static void getCelestialBodyFromDimensionID(int dimensionID, CallbackInfoReturnable<CelestialBody> cir) {
-		if (cir.getReturnValue() != null) {
-			return;
-		}
-		cir.setReturnValue(StarRegistry.getLandableStarFromDimensionID(dimensionID));
-	}
+    @Inject(method = "getCelestialBodyFromDimensionID", at = @At("RETURN"), cancellable = true)
+    private static void getCelestialBodyFromDimensionID(int dimensionID, CallbackInfoReturnable<CelestialBody> cir) {
+        if (cir.getReturnValue() != null) {
+            return;
+        }
+        cir.setReturnValue(StarRegistry.getLandableStarFromDimensionID(dimensionID));
+    }
 
-	/**
-	 * @author FuBangkun and Team Galacticraft
-	 * @reason List is immutable, so it must be replaced.
-	 */
-	@Overwrite
-	public static ImmutableCelestialList<CelestialBody> getAllReachableBodies() {
-		assert getPlanets() != null;
-		assert getMoons() != null;
-		return ImmutableCelestialList.from(
-				getPlanets().stream().filter(CelestialBody.filterReachable()).collect(CelestialCollector.toList()),
-				getMoons().stream().filter(CelestialBody.filterReachable()).collect(CelestialCollector.toList()),
-				StarRegistry.getLandableStars().stream().filter(CelestialBody.filterReachable()).collect(CelestialCollector.toList())
-		);
-	}
+    /**
+     * @author FuBangkun and Team Galacticraft
+     * @reason List is immutable, so it must be replaced.
+     */
+    @Overwrite
+    public static ImmutableCelestialList<CelestialBody> getAllReachableBodies() {
+        assert getPlanets() != null;
+        assert getMoons() != null;
+        return ImmutableCelestialList.from(
+                getPlanets().stream().filter(CelestialBody.filterReachable()).collect(CelestialCollector.toList()),
+                getMoons().stream().filter(CelestialBody.filterReachable()).collect(CelestialCollector.toList()),
+                StarRegistry.getLandableStars().stream().filter(CelestialBody.filterReachable()).collect(CelestialCollector.toList())
+        );
+    }
 }
